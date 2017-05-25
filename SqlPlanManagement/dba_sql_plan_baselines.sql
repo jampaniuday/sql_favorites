@@ -79,24 +79,6 @@ from dba_sql_plan_baselines spb
 group by rollup(parsing_schema_name)
 order by 2 desc
 ;
-/*
-PARSING_SCHEMA_NAME	COUNT(*)
-					8997         17822
-ADAPTER				7075		14597
-PWRLINE				881
-PWRAPP				499
-RPT_MONITOR			445
-DBSNMP				32
-SYSTEM				27
-EDMS_JAVA			15
-PMRDETLP			7
-ESPID				7
-EDMSRPT				4
-SYNC_PH2			3
-SYNC_SUPPORT		1
-SYS					1
-
-*/
 
 -- baselines created manually
 select sql_handle, creator, origin, parsing_schema_name, enabled, accepted, fixed, reproduced, created
