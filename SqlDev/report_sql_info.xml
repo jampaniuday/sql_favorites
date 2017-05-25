@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<displays>
+<display id="4c24f481-014c-1000-8002-0afa247686e8" type="" style="Table" enable="true">
+	<name><![CDATA[v$sql_info]]></name>
+	<description><![CDATA[]]></description>
+	<tooltip><![CDATA[]]></tooltip>
+	<drillclass><![CDATA[]]></drillclass>
+	<CustomValues>
+		<TYPE>horizontal</TYPE>
+	</CustomValues>
+	<query>
+		<sql><![CDATA[select s.sql_id
+,      s.inst_id
+,      s.child_number
+,      s.plan_hash_value
+,      s.first_load_time
+,      s.executions
+,      round(s.buffer_gets/greatest(s.executions,1))   "lio/ex"
+,      round(s.disk_reads/greatest(executions,1))      "pio/ex"
+,      case when s.command_type in (2,3,6,7)
+            then case when s.executions > 0 then round(s.rows_processed/s.executions) end
+       end "rows/ex"
+,      to_char(floor(((s.elapsed_time/case when s.executions > 0 then s.executions else 1 end)/1000000)/3600),'fm9900')||':'||
+        to_char(floor(mod(((s.elapsed_time/case when s.executions > 0 then s.executions else 1 end)/1000000),3600)/60),'fm00')||':'||
+        to_char(floor(mod(mod(((s.elapsed_time/case when s.executions > 0 then s.executions else 1 end)/1000000),3600),60)),'fm00') ||'.'||
+        to_char(round(mod((s.elapsed_time/case when s.executions > 0 then s.executions else 1 end),1000000)/1000000,5)*100000,'fm00000')  "Elapsed/exec"
+,      case when s.executions > 0 then round(s.cpu_time/s.executions)   end/1000000 "cpu/ex"
+,      case when s.executions > 0 then round(s.application_wait_time/s.executions)   end/1000000 "apw/ex"
+,      case when s.executions > 0 then round(s.concurrency_wait_time/s.executions)   end/1000000 "concw/ex"
+,      case when s.executions > 0 then round(s.cluster_wait_time/s.executions)   end/1000000 "clw/ex"
+,      case when s.executions > 0 then round(s.user_io_wait_time/s.executions)   end/1000000 "useriow/ex"
+,      case when s.executions > 0 then round(s.plsql_exec_time/s.executions)   end/1000000 "plsqlw/ex"
+,      case when s.executions > 0 then round(s.java_exec_time/s.executions)   end/1000000 "javaw/ex"
+,      rows_processed "Rows"
+,      case when s.elapsed_time = 0 then 0 else trunc(s.rows_processed/(nullif(s.elapsed_time,0)/1000000)) end "rows/sec"
+,      case when s.executions > 0 then round((s.cpu_time/nullif(s.elapsed_time,0))*100,2) end "%cpu"
+,      case when s.executions > 0 then round((s.application_wait_time/nullif(s.elapsed_time,0))*100,2) end "%apw"
+,      case when s.executions > 0 then round((s.concurrency_wait_time/nullif(s.elapsed_time,0))*100,2) end "%concw"
+,      case when s.executions > 0 then round((s.cluster_wait_time/nullif(s.elapsed_time,0))*100,2) end "%clw"
+,      case when s.executions > 0 then round((s.user_io_wait_time/nullif(s.elapsed_time,0))*100,2) end "%userio"
+,      case when s.executions > 0 then round((s.plsql_exec_time/nullif(s.elapsed_time,0))*100,2) end "%plsql"
+,      case when s.executions > 0 then round((s.java_exec_time/nullif(s.elapsed_time,0))*100,2) end "%java"
+,      to_char(floor((s.elapsed_time/1000000)/3600),'fm9900')||':'||
+        to_char(floor(mod((s.elapsed_time/1000000),3600)/60),'fm00')||':'||
+        to_char(floor(mod(mod((s.elapsed_time/1000000),3600),60)),'fm00') ||'.'||
+        to_char(round(mod(s.elapsed_time,1000000)/1000000,5)*100000,'fm00000')  "Elapsed hh:mi:ss"
+,      s.*
+--,      sc.bind_mismatch
+--,      sc.use_feedback_stats
+--,      sc.*
+from gv$sql                s
+,    gv$sql_shared_cursor  sc
+where s.sql_id       = :sqlid
+and   s.sql_id       = sc.sql_id
+and   s.child_number = sc.child_number
+and   s.inst_id      = sc.inst_id
+order by s.inst_id, s.first_load_time desc, s.child_number]]></sql>
+		<binds>
+			<bind id="sqlid">
+				<prompt><![CDATA[sqlid]]></prompt>
+				<tooltip><![CDATA[sql id of SQL]]></tooltip>
+				<value><![CDATA[4kg8j530a3f2v]]></value>
+				<bracket><![CDATA[null]]></bracket>
+			</bind>
+		</binds>
+	</query>
+		<pdf version="VERSION_1_7" compression="CONTENT">
+			<docproperty title="null" author="null" subject="null" keywords="null" />
+			<cell toppadding="2" bottompadding="2" leftpadding="2" rightpadding="2" horizontalalign="LEFT" verticalalign="TOP" wrap="true" />
+			<column>
+				<heading font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="FIRST_PAGE" />
+				<footing font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="NONE" />
+				<blob blob="NONE" zip="false" />
+			</column>
+			<table font="null" size="10" style="NORMAL" color="-16777216" userowshading="false" oddrowshading="-1" evenrowshading="-1" showborders="true" spacingbefore="12" spacingafter="12" horizontalalign="LEFT" />
+			<header enable="false" generatedate="false">
+				<data>
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				null																																								</data>
+			</header>
+			<footer enable="false" generatedate="false">
+				<data value="null" />
+			</footer>
+			<security enable="false" useopenpassword="false" openpassword="null" encryption="EXCLUDE_METADATA">
+				<permission enable="false" permissionpassword="null" allowcopying="true" allowprinting="true" allowupdating="false" allowaccessdevices="false" />
+			</security>
+			<pagesetup papersize="LETTER" orientation="1" measurement="in" margintop="1.0" marginbottom="1.0" marginleft="1.0" marginright="1.0" />
+		</pdf>
+	<display id="" type="" style="Table" enable="true">
+		<name><![CDATA[xplan]]></name>
+		<description><![CDATA[]]></description>
+		<tooltip><![CDATA[dbms_xplan.display_cursor]]></tooltip>
+		<drillclass><![CDATA[]]></drillclass>
+		<CustomValues>
+			<TYPE>horizontal</TYPE>
+		</CustomValues>
+		<query>
+			<sql><![CDATA[select * from table(dbms_xplan.display_cursor(:SQL_ID,:CHILD_NUMBER,'ALLSTATS LAST REMOTE PEEKED_BINDS'))]]></sql>
+			<binds>
+				<bind id="SQL_ID">
+					<prompt><![CDATA[SQL_ID]]></prompt>
+					<tooltip><![CDATA[SQL_ID]]></tooltip>
+					<value><![CDATA[NULL_VALUE]]></value>
+					<bracket><![CDATA[null]]></bracket>
+				</bind>
+				<bind id="CHILD_NUMBER">
+					<prompt><![CDATA[CHILD_NUMBER]]></prompt>
+					<tooltip><![CDATA[CHILD_NUMBER]]></tooltip>
+					<value><![CDATA[NULL_VALUE]]></value>
+					<bracket><![CDATA[null]]></bracket>
+				</bind>
+			</binds>
+		</query>
+			<pdf version="VERSION_1_7" compression="CONTENT">
+				<docproperty title="null" author="null" subject="null" keywords="null" />
+				<cell toppadding="2" bottompadding="2" leftpadding="2" rightpadding="2" horizontalalign="LEFT" verticalalign="TOP" wrap="true" />
+				<column>
+					<heading font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="FIRST_PAGE" />
+					<footing font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="NONE" />
+					<blob blob="NONE" zip="false" />
+				</column>
+				<table font="null" size="10" style="NORMAL" color="-16777216" userowshading="false" oddrowshading="-1" evenrowshading="-1" showborders="true" spacingbefore="12" spacingafter="12" horizontalalign="LEFT" />
+				<header enable="false" generatedate="false">
+					<data>
+					
+					
+					
+					
+					
+					
+					
+					null																																								</data>
+				</header>
+				<footer enable="false" generatedate="false">
+					<data value="null" />
+				</footer>
+				<security enable="false" useopenpassword="false" openpassword="null" encryption="EXCLUDE_METADATA">
+					<permission enable="false" permissionpassword="null" allowcopying="true" allowprinting="true" allowupdating="false" allowaccessdevices="false" />
+				</security>
+				<pagesetup papersize="LETTER" orientation="1" measurement="in" margintop="1.0" marginbottom="1.0" marginleft="1.0" marginright="1.0" />
+			</pdf>
+	</display>
+	<display id="" type="" style="Table" enable="true">
+		<name><![CDATA[AWR]]></name>
+		<description><![CDATA[]]></description>
+		<tooltip><![CDATA[]]></tooltip>
+		<drillclass><![CDATA[]]></drillclass>
+		<CustomValues>
+			<TYPE>horizontal</TYPE>
+		</CustomValues>
+		<query>
+			<sql><![CDATA[select snap.snap_id
+,      snap.end_interval_time
+,      stat.instance_number        inst
+,	     stat.plan_hash_value        phv
+,      sum(stat.parse_calls_delta) prs
+,      sum(stat.executions_delta)  exe
+,      sum(stat.buffer_gets_delta) lio
+,      sum(stat.disk_reads_delta) pio
+--,      sum(stat.elapsed_time_total)/1000000 ela_tot1
+--,      to_char(floor(sum(stat.elapsed_time_total)/1000000/3600),'fm9900')||':'||
+--        to_char(floor(mod(sum(stat.elapsed_time_total)/1000000,3600)/60),'fm00')||':'||
+--        to_char(floor(mod(mod(sum(stat.elapsed_time_total)/1000000,3600),60)),'fm00')||'.' ||
+--        to_char(round(mod(sum(stat.elapsed_time_total),1000000)/1000000,6)*1000000,'fm000000') ela_tot
+,      to_char(floor(sum(stat.elapsed_time_delta)/1000000/3600),'fm9900')||':'||
+        to_char(floor(mod(sum(stat.elapsed_time_delta)/1000000,3600)/60),'fm00')||':'||
+        to_char(floor(mod(mod(sum(stat.elapsed_time_delta)/1000000,3600),60)),'fm00')||'.' ||
+        to_char(round(mod(sum(stat.elapsed_time_delta),1000000)/1000000,6)*1000000,'fm000000') ela_delta
+,      sum(case when stat.executions_delta > 0 then round(stat.buffer_gets_delta/stat.executions_delta)    end) "lio/ex"
+,      sum(case when stat.executions_delta > 0 then round(stat.disk_reads_delta/stat.executions_delta)     end) "pio/ex"
+,      round(( sum(stat.disk_reads_delta) / nullif(sum(stat.buffer_gets_delta),0) ) * 100,2) "%pio"
+,      sum(case when stat.executions_delta > 0 then round(stat.rows_processed_delta/stat.executions_delta) end) "rows/ex"
+,      sum(case when stat.executions_delta > 0 then round(stat.elapsed_time_delta/stat.executions_delta)   end)/1000000 "ela/ex"
+,      sum(case when stat.executions_delta > 0 then round(stat.cpu_time_delta/stat.executions_delta)   end)/1000000 "cpu/ex"
+,      sum(case when stat.executions_delta > 0 then round(stat.iowait_delta/stat.executions_delta)   end)/1000000 "iow/ex"
+,      sum(case when stat.executions_delta > 0 then round(stat.clwait_delta/stat.executions_delta)   end)/1000000 "clw/ex"
+,      sum(case when stat.executions_delta > 0 then round((stat.elapsed_time_delta-stat.clwait_delta)/stat.executions_delta)   end)/1000000 "ela-clus/ex"
+,      round((sum(stat.cpu_time_delta) / nullif(sum(stat.elapsed_time_delta),0) ) * 100,2) "%cpu"
+,      round((sum(stat.iowait_delta) / nullif(sum(stat.elapsed_time_delta),0) ) * 100,2) "%iowait"
+,      round((sum(stat.clwait_delta) / nullif(sum(stat.elapsed_time_delta),0) ) * 100,2) "%clwait"
+,      round((sum(stat.ccwait_delta) / nullif(sum(stat.elapsed_time_delta),0) ) * 100,2) "%ccwait"
+,      round((sum(stat.apwait_delta) / nullif(sum(stat.elapsed_time_delta),0) ) * 100,2) "%apwait"
+,      to_char(floor(sum(stat.cpu_time_delta)/1000000/3600),'fm9900')||':'||
+        to_char(floor(mod(sum(stat.cpu_time_delta)/1000000,3600)/60),'fm00')||':'||
+        to_char(floor(mod(mod(sum(stat.cpu_time_delta)/1000000,3600),60)),'fm00')||'.' ||
+        to_char(round(mod(sum(stat.cpu_time_delta),1000000)/1000000,6)*1000000,'fm000000') cpu_time_delta
+,      to_char(floor(sum(stat.iowait_delta)/1000000/3600),'fm9900')||':'||
+        to_char(floor(mod(sum(stat.iowait_delta)/1000000,3600)/60),'fm00')||':'||
+        to_char(floor(mod(mod(sum(stat.iowait_delta)/1000000,3600),60)),'fm00')||'.' ||
+        to_char(round(mod(sum(stat.iowait_delta),1000000)/1000000,6)*1000000,'fm000000') iowait_delta
+,      to_char(floor(sum(stat.clwait_delta)/1000000/3600),'fm9900')||':'||
+        to_char(floor(mod(sum(stat.clwait_delta)/1000000,3600)/60),'fm00')||':'||
+        to_char(floor(mod(mod(sum(stat.clwait_delta)/1000000,3600),60)),'fm00')||'.' ||
+        to_char(round(mod(sum(stat.clwait_delta),1000000)/1000000,6)*1000000,'fm000000') clusterwait_delta
+,      to_char(floor(sum(stat.ccwait_delta)/1000000/3600),'fm9900')||':'||
+        to_char(floor(mod(sum(stat.ccwait_delta)/1000000,3600)/60),'fm00')||':'||
+        to_char(floor(mod(mod(sum(stat.ccwait_delta)/1000000,3600),60)),'fm00')||'.' ||
+        to_char(round(mod(sum(stat.ccwait_delta),1000000)/1000000,6)*1000000,'fm000000') ccwait_delta
+,      to_char(floor(sum(stat.apwait_delta)/1000000/3600),'fm9900')||':'||
+        to_char(floor(mod(sum(stat.apwait_delta)/1000000,3600)/60),'fm00')||':'||
+        to_char(floor(mod(mod(sum(stat.apwait_delta)/1000000,3600),60)),'fm00')||'.' ||
+        to_char(round(mod(sum(stat.apwait_delta),1000000)/1000000,6)*1000000,'fm000000') apwait_delta
+,      sum(stat.rows_processed_delta)     sum_rows_proc
+,      sum(stat.fetches_delta)            sum_fetches
+,      sum(case when stat.executions_delta > 0 then round(stat.fetches_delta/stat.executions_delta)   end) "ftch/ex"
+,      min(stat.force_matching_signature) force_matching_signature
+,      min(stat.sql_id) sql_id
+from   dba_hist_sqlstat  stat
+,      dba_hist_snapshot snap
+where  stat.sql_id = :SQL_ID
+and    snap.snap_id         = stat.snap_id
+and    snap.dbid            = stat.dbid
+and    snap.instance_number = stat.instance_number
+and    snap.dbid            = (select dbid from v$database)
+group by snap.snap_id, snap.end_interval_time, stat.instance_number, stat.plan_hash_value
+having sum(stat.executions_delta) > 0
+order by snap.snap_id desc, stat.instance_number]]></sql>
+			<binds>
+				<bind id="SQL_ID">
+					<prompt><![CDATA[SQL_ID]]></prompt>
+					<tooltip><![CDATA[SQL_ID]]></tooltip>
+					<value><![CDATA[NULL_VALUE]]></value>
+					<bracket><![CDATA[null]]></bracket>
+				</bind>
+			</binds>
+		</query>
+			<pdf version="VERSION_1_7" compression="CONTENT">
+				<docproperty title="null" author="null" subject="null" keywords="null" />
+				<cell toppadding="2" bottompadding="2" leftpadding="2" rightpadding="2" horizontalalign="LEFT" verticalalign="TOP" wrap="true" />
+				<column>
+					<heading font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="FIRST_PAGE" />
+					<footing font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="NONE" />
+					<blob blob="NONE" zip="false" />
+				</column>
+				<table font="null" size="10" style="NORMAL" color="-16777216" userowshading="false" oddrowshading="-1" evenrowshading="-1" showborders="true" spacingbefore="12" spacingafter="12" horizontalalign="LEFT" />
+				<header enable="false" generatedate="false">
+					<data>
+					
+					
+					
+					
+					
+					
+					
+					null																																								</data>
+				</header>
+				<footer enable="false" generatedate="false">
+					<data value="null" />
+				</footer>
+				<security enable="false" useopenpassword="false" openpassword="null" encryption="EXCLUDE_METADATA">
+					<permission enable="false" permissionpassword="null" allowcopying="true" allowprinting="true" allowupdating="false" allowaccessdevices="false" />
+				</security>
+				<pagesetup papersize="LETTER" orientation="1" measurement="in" margintop="1.0" marginbottom="1.0" marginleft="1.0" marginright="1.0" />
+			</pdf>
+	</display>
+	<display id="" type="" style="Code" enable="true">
+		<name><![CDATA[monitor]]></name>
+		<description><![CDATA[]]></description>
+		<tooltip><![CDATA[]]></tooltip>
+		<drillclass><![CDATA[]]></drillclass>
+		<CustomValues>
+		</CustomValues>
+		<query>
+			<sql><![CDATA[select dbms_sqltune.report_sql_monitor(sql_id=>:SQL_ID,report_level=>'TYPICAL', type=>'TEXT') sqlmon from dual]]></sql>
+		</query>
+			<pdf version="VERSION_1_7" compression="CONTENT">
+				<docproperty title="null" author="null" subject="null" keywords="null" />
+				<cell toppadding="2" bottompadding="2" leftpadding="2" rightpadding="2" horizontalalign="LEFT" verticalalign="TOP" wrap="true" />
+				<column>
+					<heading font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="FIRST_PAGE" />
+					<footing font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="NONE" />
+					<blob blob="NONE" zip="false" />
+				</column>
+				<table font="null" size="10" style="NORMAL" color="-16777216" userowshading="false" oddrowshading="-1" evenrowshading="-1" showborders="true" spacingbefore="12" spacingafter="12" horizontalalign="LEFT" />
+				<header enable="false" generatedate="false">
+					<data>
+					
+					
+					
+					
+					null																									</data>
+				</header>
+				<footer enable="false" generatedate="false">
+					<data value="null" />
+				</footer>
+				<security enable="false" useopenpassword="false" openpassword="null" encryption="EXCLUDE_METADATA">
+					<permission enable="false" permissionpassword="null" allowcopying="true" allowprinting="true" allowupdating="false" allowaccessdevices="false" />
+				</security>
+				<pagesetup papersize="LETTER" orientation="1" measurement="in" margintop="1.0" marginbottom="1.0" marginleft="1.0" marginright="1.0" />
+			</pdf>
+	</display>
+	<display id="" type="" style="Table" enable="true">
+		<name><![CDATA[binds]]></name>
+		<description><![CDATA[]]></description>
+		<tooltip><![CDATA[]]></tooltip>
+		<drillclass><![CDATA[]]></drillclass>
+		<CustomValues>
+			<TYPE>horizontal</TYPE>
+		</CustomValues>
+		<query>
+			<sql><![CDATA[select sql_id, inst_id, child_number, child_address, 'var  ' || substr(name,2) || ' '    || datatype_string || ';' var
+,      'exec ' || name || ' := '
+               || nvl2(value_string, case substr(datatype_string,1,8) when 'VARCHAR2' then '''' when 'DATE' then '''' else null end, null)
+               || nvl(value_string,'null')
+               || nvl2(value_string, case substr(datatype_string,1,8) when 'VARCHAR2' then '''' when 'DATE' then '''' else null end, null)
+               || ';' val
+from gv$sql_bind_capture
+where sql_id = :SQL_ID
+and   inst_id = :INST_ID
+order by inst_id, child_number,child_address,position;]]></sql>
+			<binds>
+				<bind id="SQL_ID">
+					<prompt><![CDATA[SQL_ID]]></prompt>
+					<tooltip><![CDATA[SQL_ID]]></tooltip>
+					<value><![CDATA[NULL_VALUE]]></value>
+					<bracket><![CDATA[null]]></bracket>
+				</bind>
+				<bind id="INST_ID">
+					<prompt><![CDATA[INST_ID]]></prompt>
+					<tooltip><![CDATA[INST_ID]]></tooltip>
+					<value><![CDATA[NULL_VALUE]]></value>
+					<bracket><![CDATA[null]]></bracket>
+				</bind>
+			</binds>
+		</query>
+			<pdf version="VERSION_1_7" compression="CONTENT">
+				<docproperty title="null" author="null" subject="null" keywords="null" />
+				<cell toppadding="2" bottompadding="2" leftpadding="2" rightpadding="2" horizontalalign="LEFT" verticalalign="TOP" wrap="true" />
+				<column>
+					<heading font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="FIRST_PAGE" />
+					<footing font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="NONE" />
+					<blob blob="NONE" zip="false" />
+				</column>
+				<table font="null" size="10" style="NORMAL" color="-16777216" userowshading="false" oddrowshading="-1" evenrowshading="-1" showborders="true" spacingbefore="12" spacingafter="12" horizontalalign="LEFT" />
+				<header enable="false" generatedate="false">
+					<data>
+					
+					
+					
+					
+					null																									</data>
+				</header>
+				<footer enable="false" generatedate="false">
+					<data value="null" />
+				</footer>
+				<security enable="false" useopenpassword="false" openpassword="null" encryption="EXCLUDE_METADATA">
+					<permission enable="false" permissionpassword="null" allowcopying="true" allowprinting="true" allowupdating="false" allowaccessdevices="false" />
+				</security>
+				<pagesetup papersize="LETTER" orientation="1" measurement="in" margintop="1.0" marginbottom="1.0" marginleft="1.0" marginright="1.0" />
+			</pdf>
+	</display>
+	<display id="" type="" style="Table" enable="true">
+		<name><![CDATA[optimizer_env]]></name>
+		<description><![CDATA[]]></description>
+		<tooltip><![CDATA[]]></tooltip>
+		<drillclass><![CDATA[]]></drillclass>
+		<CustomValues>
+			<TYPE>horizontal</TYPE>
+		</CustomValues>
+		<query>
+			<sql><![CDATA[select * from gv$sql_optimizer_env 
+where sql_id = :SQL_ID and child_number= :CHILD_NUMBER 
+order by inst_id, name, child_number]]></sql>
+			<binds>
+				<bind id="SQL_ID">
+					<prompt><![CDATA[SQL_ID]]></prompt>
+					<tooltip><![CDATA[SQL_ID]]></tooltip>
+					<value><![CDATA[NULL_VALUE]]></value>
+					<bracket><![CDATA[null]]></bracket>
+				</bind>
+				<bind id="CHILD_NUMBER">
+					<prompt><![CDATA[CHILD_NUMBER]]></prompt>
+					<tooltip><![CDATA[CHILD_NUMBER]]></tooltip>
+					<value><![CDATA[NULL_VALUE]]></value>
+					<bracket><![CDATA[null]]></bracket>
+				</bind>
+			</binds>
+		</query>
+			<pdf version="VERSION_1_7" compression="CONTENT">
+				<docproperty title="null" author="null" subject="null" keywords="null" />
+				<cell toppadding="2" bottompadding="2" leftpadding="2" rightpadding="2" horizontalalign="LEFT" verticalalign="TOP" wrap="true" />
+				<column>
+					<heading font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="FIRST_PAGE" />
+					<footing font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="NONE" />
+					<blob blob="NONE" zip="false" />
+				</column>
+				<table font="null" size="10" style="NORMAL" color="-16777216" userowshading="false" oddrowshading="-1" evenrowshading="-1" showborders="true" spacingbefore="12" spacingafter="12" horizontalalign="LEFT" />
+				<header enable="false" generatedate="false">
+					<data>
+					
+					
+					
+					
+					null																									</data>
+				</header>
+				<footer enable="false" generatedate="false">
+					<data value="null" />
+				</footer>
+				<security enable="false" useopenpassword="false" openpassword="null" encryption="EXCLUDE_METADATA">
+					<permission enable="false" permissionpassword="null" allowcopying="true" allowprinting="true" allowupdating="false" allowaccessdevices="false" />
+				</security>
+				<pagesetup papersize="LETTER" orientation="1" measurement="in" margintop="1.0" marginbottom="1.0" marginleft="1.0" marginright="1.0" />
+			</pdf>
+	</display>
+	<display id="" type="" style="Code" enable="true">
+		<name><![CDATA[sqltext]]></name>
+		<description><![CDATA[]]></description>
+		<tooltip><![CDATA[]]></tooltip>
+		<drillclass><![CDATA[]]></drillclass>
+		<CustomValues>
+		</CustomValues>
+		<query>
+			<sql><![CDATA[select SQL_FULLTEXT 
+from gv$sql 
+where sql_id = :SQL_ID]]></sql>
+			<binds>
+				<bind id="SQL_ID">
+					<prompt><![CDATA[SQL_ID]]></prompt>
+					<tooltip><![CDATA[SQL_ID]]></tooltip>
+					<value><![CDATA[NULL_VALUE]]></value>
+					<bracket><![CDATA[null]]></bracket>
+				</bind>
+			</binds>
+		</query>
+			<pdf version="VERSION_1_7" compression="CONTENT">
+				<docproperty title="null" author="null" subject="null" keywords="null" />
+				<cell toppadding="2" bottompadding="2" leftpadding="2" rightpadding="2" horizontalalign="LEFT" verticalalign="TOP" wrap="true" />
+				<column>
+					<heading font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="FIRST_PAGE" />
+					<footing font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="NONE" />
+					<blob blob="NONE" zip="false" />
+				</column>
+				<table font="null" size="10" style="NORMAL" color="-16777216" userowshading="false" oddrowshading="-1" evenrowshading="-1" showborders="true" spacingbefore="12" spacingafter="12" horizontalalign="LEFT" />
+				<header enable="false" generatedate="false">
+					<data>
+					
+					
+					
+					
+					null																									</data>
+				</header>
+				<footer enable="false" generatedate="false">
+					<data value="null" />
+				</footer>
+				<security enable="false" useopenpassword="false" openpassword="null" encryption="EXCLUDE_METADATA">
+					<permission enable="false" permissionpassword="null" allowcopying="true" allowprinting="true" allowupdating="false" allowaccessdevices="false" />
+				</security>
+				<pagesetup papersize="LETTER" orientation="1" measurement="in" margintop="1.0" marginbottom="1.0" marginleft="1.0" marginright="1.0" />
+			</pdf>
+	</display>
+	<display id="" type="" style="Table" enable="true">
+		<name><![CDATA[shared_cursor]]></name>
+		<description><![CDATA[]]></description>
+		<tooltip><![CDATA[]]></tooltip>
+		<drillclass><![CDATA[]]></drillclass>
+		<CustomValues>
+			<TYPE>horizontal</TYPE>
+		</CustomValues>
+		<query>
+			<sql><![CDATA[select * from gv$sql_shared_cursor 
+where sql_id = :SQL_ID 
+order by inst_id, child_number]]></sql>
+		</query>
+			<pdf version="VERSION_1_7" compression="CONTENT">
+				<docproperty title="null" author="null" subject="null" keywords="null" />
+				<cell toppadding="2" bottompadding="2" leftpadding="2" rightpadding="2" horizontalalign="LEFT" verticalalign="TOP" wrap="true" />
+				<column>
+					<heading font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="FIRST_PAGE" />
+					<footing font="null" size="10" style="NORMAL" color="-16777216" rowshading="-1" labeling="NONE" />
+					<blob blob="NONE" zip="false" />
+				</column>
+				<table font="null" size="10" style="NORMAL" color="-16777216" userowshading="false" oddrowshading="-1" evenrowshading="-1" showborders="true" spacingbefore="12" spacingafter="12" horizontalalign="LEFT" />
+				<header enable="false" generatedate="false">
+					<data>
+					
+					
+					
+					
+					null																									</data>
+				</header>
+				<footer enable="false" generatedate="false">
+					<data value="null" />
+				</footer>
+				<security enable="false" useopenpassword="false" openpassword="null" encryption="EXCLUDE_METADATA">
+					<permission enable="false" permissionpassword="null" allowcopying="true" allowprinting="true" allowupdating="false" allowaccessdevices="false" />
+				</security>
+				<pagesetup papersize="LETTER" orientation="1" measurement="in" margintop="1.0" marginbottom="1.0" marginleft="1.0" marginright="1.0" />
+			</pdf>
+	</display>
+</display>
+</displays>
