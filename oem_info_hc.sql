@@ -852,7 +852,6 @@ declare
       for r_database in (select target_name
                          from sysman.mgmt_targets@oem_db
                          where target_type = 'oracle_database'
-                         and   target_name not like '%duke-energy.com' -- should be removed
                          and host_name = i_host_name
                          order by target_name)
       loop
